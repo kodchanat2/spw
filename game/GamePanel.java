@@ -22,13 +22,15 @@ public class GamePanel extends JPanel {
 
 	}
 
-	public void updateGameUI(){
+	public void updateGameUI(GameEngine engine){
 		big.clearRect(0, 0, width, height);
 
+		big.setColor(Color.WHITE);		
+		big.drawString(String.format("%08d", engine.getScore()), width-80, 20);
 		for(Sprite s : sprites){
 			s.draw(big);
 		}
-		
+
 		repaint();
 	}
 

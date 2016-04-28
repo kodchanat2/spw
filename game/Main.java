@@ -10,11 +10,12 @@ public class Main {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(WIDTH, HEIGHT);
 
-		SpaceShip v = new SpaceShip(WIDTH/2-10, HEIGHT*8/10, 20, 20);
+		SpaceShip v = new SpaceShip(WIDTH/2-10, HEIGHT*85/100, 20, 20);
 		GamePanel gp = new GamePanel(WIDTH, HEIGHT);
 		GameEngine engine = new GameEngine(gp, v);
 		frame.add(gp);
 		frame.setVisible(true);
 
+		engine.start();
 	}
 }
