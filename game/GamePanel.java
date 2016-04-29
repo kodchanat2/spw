@@ -30,8 +30,18 @@ public class GamePanel extends JPanel {
 		for(Sprite s : sprites){
 			s.draw(big);
 		}
+		drawMessage(engine.getMessage());
 
 		repaint();
+	}
+
+	public void drawMessage(String message){
+		if(message != null){
+			big.setColor(Color.YELLOW);		
+			big.setFont(big.getFont().deriveFont(25.0f));
+			big.drawString(message, 
+			width/2 - message.length()*25*3/8, height/3);
+		}
 	}
 
 	@Override

@@ -13,6 +13,7 @@ public class GameEngine implements KeyListener{
 	private Timer timer;	
 
 	private long score;
+	private String message;
 	private double difficulty = 0.1;
 	
 	public GameEngine(GamePanel gp, SpaceShip v) {
@@ -61,11 +62,30 @@ public class GameEngine implements KeyListener{
 		}
 
 		gp.updateGameUI(this);
+
+		Rectangle2D.Double vr = v.getRectangle();
+		Rectangle2D.Double er;
+		for(Enemy e : enemies){
+			er = e.getRectangle();
+			if(er.intersects(vr)){
+				die();
+				return;
+			}
+		}
 	}
 	
+	public void die(){
+		timer.stop();
+		message = "GAME OVER!";
+		gp.updateGameUI(this);
+	}
 
 	public long getScore(){
 		return score;
+	}
+
+	public String getMessage(){
+		return message;
 	}
 	
 	void controlVehicle(KeyEvent e) {

@@ -1,6 +1,8 @@
 package game;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 
 public abstract class Sprite {
 	int x;
@@ -16,4 +18,8 @@ public abstract class Sprite {
 	}
 
 	abstract public void draw(Graphics2D g);
+	
+	public Double getRectangle() {
+		return new Rectangle2D.Double(x, y, width, height);
+	}
 }
