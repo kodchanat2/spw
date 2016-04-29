@@ -3,7 +3,7 @@ package game;
 import java.awt.*;
 
 public class Enemy extends Sprite{
-	static private int Y_BORN = 30;
+	static private int Y_BORN = 0;
 	static private int Y_TO_DIE;
 	static private int Y_TO_FADE;
 
@@ -12,7 +12,7 @@ public class Enemy extends Sprite{
 	
 	public Enemy(int x, int screenHeight) {
 		super(x, Y_BORN, 5, 10);
-		Y_TO_DIE = screenHeight-10;
+		Y_TO_DIE = screenHeight-height;
 		Y_TO_FADE = Y_TO_DIE*85/100;
 	}
 

@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class GameEngine{
+public class GameEngine implements KeyListener{
 	private GamePanel gp;
 	private SpaceShip v;
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
@@ -66,5 +66,36 @@ public class GameEngine{
 
 	public long getScore(){
 		return score;
+	}
+	
+	void controlVehicle(KeyEvent e) {
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_A:
+				v.move(-1);
+				break;
+			case KeyEvent.VK_RIGHT:
+			case KeyEvent.VK_D:
+				v.move(1);
+				break;
+			case KeyEvent.VK_SPACE:
+				// System.out.println(e);
+				break;
+		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		controlVehicle(e);
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		//do nothing
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		//do nothing		
 	}
 }

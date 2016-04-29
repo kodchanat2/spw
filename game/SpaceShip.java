@@ -4,6 +4,9 @@ import java.awt.*;
 
 public class SpaceShip extends Sprite{
 	
+	int step = 8;
+	private int screenWidth;
+
 	public SpaceShip(int x, int y, int width, int height) {
 		super(x, y, width, height);
 	}
@@ -15,4 +18,15 @@ public class SpaceShip extends Sprite{
 		
 	}
 
+	public void move(int direction){
+		x += (step * direction);
+		if(x < 0)
+			x = 0;
+		if(x > screenWidth - width)
+			x = screenWidth - width;
+	}
+
+	public void setScreenWidth(int w){
+		screenWidth = w;
+	}
 }
