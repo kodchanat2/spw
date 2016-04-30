@@ -11,7 +11,8 @@ public class GameEngine implements KeyListener{
 	private SpaceShip v;
 	private ArrayList<Enemy> enemies;
 	private ArrayList<Bullet> bullets;
-	private Timer timer;	
+	private Timer timer;
+	private boolean isPause;
 
 	private long score;
 	private int hp;
@@ -22,23 +23,6 @@ public class GameEngine implements KeyListener{
 	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
 		this.v = v;	
-
-		init();
-	}
-
-	public void init(){
-		messages = null;
-		score = 0;
-		difficulty = 0.1;
-		hp = 3;
-		enemies = new ArrayList<Enemy>();
-		bullets = new ArrayList<Bullet>();
-		gp.sprites = new ArrayList<Sprite>();
-		gp.sprites.add(v);
-
-		if(timer != null){
-			timer.stop();
-		}
 		timer = new Timer(50, new ActionListener() {
 			
 			@Override
@@ -47,6 +31,24 @@ public class GameEngine implements KeyListener{
 			}
 		});
 		timer.setRepeats(true);
+
+		init();
+	}
+
+	public void init(){
+		messages = null;
+		isPause = false;
+		score = 0;
+		difficulty = 0.1;
+		hp = 3;
+		enemies = new ArrayList<Enemy>();
+		bullets = new ArrayList<Bullet>();
+		gp.sprites = new ArrayList<Sprite>();
+		gp.sprites.add(v);
+
+		if(timer.isRunning()){
+			timer.stop();
+		}
 	}
 
 	public void start(){
@@ -136,6 +138,22 @@ public class GameEngine implements KeyListener{
 		};
 		gp.updateGameUI(this);
 	}
+	
+	public void pause(){
+		if(!isPause){
+			timer.stop();
+			messages = new String[]{
+				"PAUSE", "",
+				"press 'P' or 'Esc' to Continue"
+			};
+		}
+		else{
+			timer.start();
+			messages = null;
+		}
+		gp.updateGameUI(this);
+		isPause = !isPause;
+	}
 
 	public long getScore(){
 		return score;
@@ -168,6 +186,11 @@ public class GameEngine implements KeyListener{
 			case KeyEvent.VK_R:
 				init();
 				start();
+				break;
+			case KeyEvent.VK_ESCAPE:
+			case KeyEvent.VK_P:
+				if(hp>0)
+					pause();
 				break;
 		}
 	}
