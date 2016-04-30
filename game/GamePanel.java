@@ -10,7 +10,7 @@ public class GamePanel extends JPanel {
 	private int height;
 	private BufferedImage bi;
 	private Graphics2D big;
-	ArrayList<Sprite> sprites = new ArrayList<Sprite>();
+	ArrayList<Sprite> sprites;
 
 	public GamePanel(int width, int height) {
 		this.width = width;
@@ -25,8 +25,13 @@ public class GamePanel extends JPanel {
 	public void updateGameUI(GameEngine engine){
 		big.clearRect(0, 0, width, height);
 
-		big.setColor(Color.WHITE);		
-		big.drawString(String.format("%08d", engine.getScore()), width-80, 20);
+		big.setColor(Color.YELLOW);
+		big.setFont(big.getFont().deriveFont(10.0f));
+		big.drawString(String.format("highscore : %08d", engine.getHighScore()), width-130, 15);
+		big.setColor(Color.WHITE);
+		big.setFont(big.getFont().deriveFont(12.0f));
+		big.drawString(String.format("%08d", engine.getScore()), width-80, 30);
+
 		for(Sprite s : sprites){
 			s.draw(big);
 		}
@@ -35,12 +40,15 @@ public class GamePanel extends JPanel {
 		repaint();
 	}
 
-	public void drawMessage(String message){
+	public void drawMessage(String[] message){
 		if(message != null){
 			big.setColor(Color.YELLOW);		
-			big.setFont(big.getFont().deriveFont(25.0f));
-			big.drawString(message, 
-			width/2 - message.length()*25*3/8, height/3);
+			for(int i = 0; i<message.length ; i++){
+				float fontSize = 25.0f-5.0f*i;
+				big.setFont(big.getFont().deriveFont(fontSize));
+				big.drawString(message[i], 
+				width/2 - message[i].length()*fontSize*0.35f+(25-fontSize)*5, height/3+i*(fontSize+10));
+			}
 		}
 	}
 

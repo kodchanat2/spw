@@ -9,20 +9,32 @@ import java.util.Iterator;
 public class GameEngine implements KeyListener{
 	private GamePanel gp;
 	private SpaceShip v;
-	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
+	private ArrayList<Enemy> enemies;	
 	private Timer timer;	
 
 	private long score;
-	private String message;
-	private double difficulty = 0.1;
+	private long highScore = 0;
+	private String[] message;
+	private double difficulty;
 	
 	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
 		this.v = v;	
+
+		init();
+	}
+
+	public void init(){
+		message = null;
 		score = 0;
-		
+		difficulty = 0.1;
+		enemies = new ArrayList<Enemy>();
+		gp.sprites = new ArrayList<Sprite>();
 		gp.sprites.add(v);
 
+		if(timer != null){
+			timer.stop();
+		}
 		timer = new Timer(50, new ActionListener() {
 			
 			@Override
@@ -58,6 +70,7 @@ public class GameEngine implements KeyListener{
 				e_iter.remove();
 				gp.sprites.remove(e);
 				score += 100;
+				highScore = Math.max(score,highScore);
 			}
 		}
 
@@ -76,15 +89,22 @@ public class GameEngine implements KeyListener{
 	
 	public void die(){
 		timer.stop();
-		message = "GAME OVER!";
+		message = new String[]{
+			"GAME OVER!",
+			String.format("YOUR SCORE is %08d", score),
+			"please 'R' to retry"
+		};
 		gp.updateGameUI(this);
 	}
 
 	public long getScore(){
 		return score;
 	}
+	public long getHighScore(){
+		return highScore;
+	}
 
-	public String getMessage(){
+	public String[] getMessage(){
 		return message;
 	}
 	
@@ -100,6 +120,10 @@ public class GameEngine implements KeyListener{
 				break;
 			case KeyEvent.VK_SPACE:
 				// System.out.println(e);
+				break;
+			case KeyEvent.VK_R:
+				init();
+				start();
 				break;
 		}
 	}
