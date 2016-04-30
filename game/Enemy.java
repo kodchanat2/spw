@@ -11,7 +11,7 @@ public class Enemy extends Sprite{
 	private boolean alive = true;
 	
 	public Enemy(int x, int screenHeight) {
-		super(x, Y_BORN, 5, 10);
+		super(x, Y_BORN, 10, 20);
 		Y_TO_DIE = screenHeight-height;
 		Y_TO_FADE = Y_TO_DIE*85/100;
 	}
@@ -37,5 +37,9 @@ public class Enemy extends Sprite{
 
 	public boolean isAlive(){
 		return alive;
+	}
+
+	public void die(){
+		alive = false;
 	}
 }

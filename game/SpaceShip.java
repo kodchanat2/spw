@@ -29,4 +29,11 @@ public class SpaceShip extends Sprite{
 	public void setScreenWidth(int w){
 		screenWidth = w;
 	}
+
+	public int getX(){
+		return x + width/2;
+	}
+	public int getY(){
+		return y;
+	}
 }

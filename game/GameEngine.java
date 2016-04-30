@@ -9,12 +9,13 @@ import java.util.Iterator;
 public class GameEngine implements KeyListener{
 	private GamePanel gp;
 	private SpaceShip v;
-	private ArrayList<Enemy> enemies;	
+	private ArrayList<Enemy> enemies;
+	private ArrayList<Bullet> bullets;
 	private Timer timer;	
 
 	private long score;
 	private long highScore = 0;
-	private String[] message;
+	private String[] messages;
 	private double difficulty;
 	
 	public GameEngine(GamePanel gp, SpaceShip v) {
@@ -25,10 +26,11 @@ public class GameEngine implements KeyListener{
 	}
 
 	public void init(){
-		message = null;
+		messages = null;
 		score = 0;
 		difficulty = 0.1;
 		enemies = new ArrayList<Enemy>();
+		bullets = new ArrayList<Bullet>();
 		gp.sprites = new ArrayList<Sprite>();
 		gp.sprites.add(v);
 
@@ -56,6 +58,12 @@ public class GameEngine implements KeyListener{
 		gp.sprites.add(enemy);
 	}
 
+	private void generateBullet(){
+		Bullet b = new Bullet(v.getX(), v.getY());
+		bullets.add(b);
+		gp.sprites.add(b);
+	}
+
 	private void process(){
 		if(Math.random() < difficulty){
 			generateEnemy();
@@ -73,23 +81,37 @@ public class GameEngine implements KeyListener{
 				highScore = Math.max(score,highScore);
 			}
 		}
+		for(Bullet b : bullets)
+			b.proceed();
 
 		gp.updateGameUI(this);
 
 		Rectangle2D.Double vr = v.getRectangle();
 		Rectangle2D.Double er;
+		Rectangle2D.Double br;
 		for(Enemy e : enemies){
 			er = e.getRectangle();
 			if(er.intersects(vr)){
 				die();
 				return;
 			}
+
+			Iterator<Bullet> b_iter = bullets.iterator();
+			while(b_iter.hasNext()){
+				Bullet b = b_iter.next();
+				br = b.getRectangle();
+				if(er.intersects(br)){
+					b_iter.remove();
+					gp.sprites.remove(b);
+					e.die();
+				}
+			}
 		}
 	}
 	
 	public void die(){
 		timer.stop();
-		message = new String[]{
+		messages = new String[]{
 			"GAME OVER!",
 			String.format("YOUR SCORE is %08d", score),
 			"please 'R' to retry"
@@ -104,8 +126,8 @@ public class GameEngine implements KeyListener{
 		return highScore;
 	}
 
-	public String[] getMessage(){
-		return message;
+	public String[] getMessages(){
+		return messages;
 	}
 	
 	void controlVehicle(KeyEvent e) {
@@ -119,7 +141,7 @@ public class GameEngine implements KeyListener{
 				v.move(1);
 				break;
 			case KeyEvent.VK_SPACE:
-				// System.out.println(e);
+				generateBullet();
 				break;
 			case KeyEvent.VK_R:
 				init();

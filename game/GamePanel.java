@@ -35,7 +35,7 @@ public class GamePanel extends JPanel {
 		for(Sprite s : sprites){
 			s.draw(big);
 		}
-		drawMessage(engine.getMessage());
+		drawMessage(engine.getMessages());
 
 		repaint();
 	}
