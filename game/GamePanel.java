@@ -25,29 +25,43 @@ public class GamePanel extends JPanel {
 	public void updateGameUI(GameEngine engine){
 		big.clearRect(0, 0, width, height);
 
-		big.setColor(Color.YELLOW);
-		big.setFont(big.getFont().deriveFont(10.0f));
-		big.drawString(String.format("highscore : %08d", engine.getHighScore()), width-130, 15);
-		big.setColor(Color.WHITE);
-		big.setFont(big.getFont().deriveFont(12.0f));
-		big.drawString(String.format("%08d", engine.getScore()), width-80, 30);
+		drawMessages(engine);
 
 		for(Sprite s : sprites){
 			s.draw(big);
 		}
-		drawMessage(engine.getMessages());
 
 		repaint();
 	}
 
-	public void drawMessage(String[] message){
-		if(message != null){
+	public void drawMessages(GameEngine engine){
+
+		//hightscore
+		big.setColor(Color.YELLOW);
+		big.setFont(big.getFont().deriveFont(10.0f));
+		big.drawString(String.format("highscore : %08d", engine.getHighScore()), width-130, 15);
+
+		//score
+		big.setColor(Color.WHITE);
+		big.setFont(big.getFont().deriveFont(12.0f));
+		big.drawString(String.format("%08d", engine.getScore()), width-80, 30);
+
+		//hp
+		big.setColor(Color.MAGENTA);
+		big.setFont(big.getFont().deriveFont(15.0f));
+		big.drawString("HP: ", 5, 23);
+		for(int i = 0; i < engine.getHP(); i++)
+			big.fillRect(30 + i*13, 10, 10, 15);
+		
+		//text alert
+		if(engine.getMessages() != null){
+			String[] messages =  engine.getMessages();
 			big.setColor(Color.YELLOW);		
-			for(int i = 0; i<message.length ; i++){
+			for(int i = 0; i<messages.length ; i++){
 				float fontSize = 25.0f-5.0f*i;
 				big.setFont(big.getFont().deriveFont(fontSize));
-				big.drawString(message[i], 
-				width/2 - message[i].length()*fontSize*0.35f+(25-fontSize)*5, height/3+i*(fontSize+10));
+				big.drawString(messages[i], 
+				width/2 - messages[i].length()*fontSize*0.35f+(25-fontSize)*5, height/3+i*(fontSize+10));
 			}
 		}
 	}

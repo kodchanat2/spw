@@ -14,6 +14,7 @@ public class GameEngine implements KeyListener{
 	private Timer timer;	
 
 	private long score;
+	private int hp;
 	private long highScore = 0;
 	private String[] messages;
 	private double difficulty;
@@ -29,6 +30,7 @@ public class GameEngine implements KeyListener{
 		messages = null;
 		score = 0;
 		difficulty = 0.1;
+		hp = 3;
 		enemies = new ArrayList<Enemy>();
 		bullets = new ArrayList<Bullet>();
 		gp.sprites = new ArrayList<Sprite>();
@@ -69,6 +71,15 @@ public class GameEngine implements KeyListener{
 			generateEnemy();
 		}
 
+		updateEnemiesAndBullet();
+		
+		gp.updateGameUI(this);
+
+		checkIntersects();
+		
+	}
+
+	public void updateEnemiesAndBullet(){
 		Iterator<Enemy> e_iter = enemies.iterator();
 		while(e_iter.hasNext()){
 			Enemy e = e_iter.next();
@@ -83,29 +94,36 @@ public class GameEngine implements KeyListener{
 		}
 		for(Bullet b : bullets)
 			b.proceed();
-
-		gp.updateGameUI(this);
-
+	}
+	public void checkIntersects(){
 		Rectangle2D.Double vr = v.getRectangle();
 		Rectangle2D.Double er;
 		Rectangle2D.Double br;
 		for(Enemy e : enemies){
 			er = e.getRectangle();
-			if(er.intersects(vr)){
-				die();
-				return;
+			if(er.intersects(vr) && e.isAlive()){
+				hit();
+				e.die();
 			}
 
 			Iterator<Bullet> b_iter = bullets.iterator();
 			while(b_iter.hasNext()){
 				Bullet b = b_iter.next();
 				br = b.getRectangle();
-				if(er.intersects(br)){
+
+				if(er.intersects(br) && e.isAlive()){
 					b_iter.remove();
 					gp.sprites.remove(b);
 					e.die();
 				}
 			}
+		}
+	}
+
+	public void hit(){
+		hp--;
+		if(hp <= 0){
+			die();
 		}
 	}
 	
@@ -124,6 +142,10 @@ public class GameEngine implements KeyListener{
 	}
 	public long getHighScore(){
 		return highScore;
+	}
+
+	public int getHP(){
+		return hp;
 	}
 
 	public String[] getMessages(){
